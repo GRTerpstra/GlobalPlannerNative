@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">GlobalPlanner</string>
+    <string name="welkom">d</string>
+
+    <string-array name="appointmentTypeList">
+        <item>Type afpsraak</item>
+        <item>Opscheren</item>
+        <item>Trimmen</item>
+        <item>Kaal</item>
+        <item>Bijknippen</item>
+    </string-array>
+
+</resources>
