@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText getEditText_login_password;
     private Button button_login_login;
     private String welcomeMailString;
-    private static final String TAG = "tester";
-    public static final String EXTRA_MAIL = "com.example.globalplanner.MainActivity.EXTRA_MAIL";
 
     Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl("https://witwerts.com/globalplanner/api/")
@@ -60,18 +58,14 @@ public class MainActivity extends AppCompatActivity {
     private static String jwt;
 
     private void login() {
-
         Login login = new Login(editText_login_username.getText().toString(), getEditText_login_password.getText().toString());
-
         Call<User> call = userClient.login(login);
-
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     jwt = response.body().getData().getJwt();
-                    Log.i(TAG, response.body().getData().getJwt());
                     welcomeMailString = editText_login_username.getText().toString();
                     onLoginClick();
 

@@ -32,6 +32,13 @@ public class CalendarActivity extends AppCompatActivity {
     private String welcomeMailString;
     private String jwt;
     private static final String TAG = "tester";
+    private int dayOfMonth;
+    private int month;
+    private int year;
+    private int length;
+    private int sstartingTime;
+    private String sstartingTimeString;
+    private String ttype;
 
 
     Retrofit.Builder builder = new Retrofit.Builder()
@@ -47,20 +54,23 @@ public class CalendarActivity extends AppCompatActivity {
         Intent intent = getIntent();
         welcomeMailString = intent.getStringExtra("welcomeMailKey");
         jwt = intent.getStringExtra("jwtKey");
+        dayOfMonth = intent.getIntExtra("dayOfMonth", 0);
+        month = intent.getIntExtra("month", 0);
+        year = intent.getIntExtra("year", 0);
+        sstartingTime = intent.getIntExtra("startingTime", 0);
+        ttype = intent.getStringExtra("type");
+        length = intent.getIntExtra("length", 0);
 
+        Log.i("meegekregen values", dayOfMonth + " " + month + " " + year + " " + sstartingTime + " " + ttype);
 
-
-        Log.d("tag JWT", "" + jwt);
-        Log.i("tag mail", welcomeMailString);
-
-        getTypes();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
+        getTypes();
         welcomeEmail = (TextView)findViewById(R.id.welcomeEmail);
         welcomeEmail.setText(welcomeMailString);
         logout = (Button)findViewById(R.id.logoutButton);
         makeDate = (Button)findViewById(R.id.makeDate);
+        sstartingTimeString = String.valueOf(sstartingTime);
 
         Date today = new Date();
         Calendar nextYear = Calendar.getInstance();
@@ -78,11 +88,19 @@ public class CalendarActivity extends AppCompatActivity {
                 calSelected.setTime(date);
 
                 String selectedDate = "" + calSelected.get(Calendar.DAY_OF_MONTH)
-                        + " " + (calSelected.get(Calendar.MONTH) + 1)
-                        + " " + calSelected.get(Calendar.YEAR);
+                        + "/" + (calSelected.get(Calendar.MONTH) + 1)
+                        + "/" + calSelected.get(Calendar.YEAR);
 
-                //Toast.makeText(CalendarActivity.this, selectedDate, Toast.LENGTH_SHORT).show();
+                Log.i("benodigde values", (calSelected.get(Calendar.DAY_OF_MONTH)) + " " + (calSelected.get(Calendar.MONTH) + 1) + " " + calSelected.get(Calendar.YEAR));
+
+                if (calSelected.get(Calendar.DAY_OF_MONTH) == dayOfMonth && (calSelected.get(Calendar.MONTH) + 1) == (month + 1) && calSelected.get(Calendar.YEAR) == year) {
+                    Toast.makeText(CalendarActivity.this, "Afspraak voor " + ttype + " om " + sstartingTimeString.substring(0, 2) +
+                            ":" + sstartingTimeString.substring(2,4) + " for " + length + " min.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(CalendarActivity.this, "Geen afspraak op " + selectedDate, Toast.LENGTH_SHORT).show();
+                }
             }
+
 
             @Override
             public void onDateUnselected(Date date) {
@@ -104,12 +122,12 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void getTypes() {
         String responseJWT = "JWT " + jwt;
         Call<ResponseBody> call = userClient.getTypes(responseJWT);
+        Log.i("TOKEN", responseJWT);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

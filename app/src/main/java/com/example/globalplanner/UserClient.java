@@ -14,6 +14,9 @@ public interface UserClient {
 
     @GET("appointment/type")
     Call<ResponseBody> getTypes(@Header("Authorization") String jwt);
+
+    @POST("appointment")
+    Call<ResponseBody> postAppointment(@Header("Authorization") String jwt, @Body AppointmentInfo appointmentInfo);
 }
 
 
